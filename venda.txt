@@ -1,0 +1,2 @@
+banana | 5 | Frutas | Guilherme | Fulano | 3 | 13/09/2023
+banana | 5 | Frutas | Guilherme | Fulano | 3 | 13/09/2023
