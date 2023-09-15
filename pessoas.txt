@@ -1,0 +1,2 @@
+Guilherme|123654789|12345645-89|guilherme@teste.com|Rua do teste
+Andressa|999695774|24569871-47|andressa@teste.com|Teste da Rua

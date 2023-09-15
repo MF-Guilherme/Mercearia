@@ -1,0 +1,3 @@
+1001|Fulano|99932-6832|123456768|teste@teste.com|Rua do funcionario
+1002|Ciclano|99999-9999|11111100|ciclanoteste@teste.com|Rua do funcionario ciclano
+1003|Beltrano|99999-9999|11111100|beltranoteste@teste.com|Rua do funcionario beltrano
