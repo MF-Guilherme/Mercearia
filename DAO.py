@@ -15,13 +15,12 @@ class DaoCategoria:
             cls.categoria = arq.readlines()
 
         cls.categoria = list(map(lambda x: x.replace('\n', ''), cls.categoria))
-        print(cls.categoria)
 
-        cat = []
+        categorias = []
         for i in cls.categoria:
-            cat.append(Categoria(i))
+            categorias.append(Categoria(i))
         
-        return cat
+        return categorias
         
 class DaoVenda:
 

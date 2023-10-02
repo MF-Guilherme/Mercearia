@@ -1,3 +1,5 @@
 Frutas
 Verduras
 Carnes
+Frios
+Açougue
