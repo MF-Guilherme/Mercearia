@@ -1,1 +1,2 @@
-pera|5|Frutas|14
+banana|75|Frutas|56
+maca|9|Frutas|90

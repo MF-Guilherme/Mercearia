@@ -100,6 +100,28 @@ class ControllerEstoque:
             for i in x:
                 arq.writelines(f'{i.produto.nome}|{i.produto.preco}|{i.produto.categoria}|{i.quantidade}\n')
 
+    def alterar_produto(self, nome_a_alterar, novo_nome, novo_preco, nova_categoria, nova_quantidade):
+        x = DaoEstoque.ler()
+        y = DaoCategoria.ler()
+        h = list(filter(lambda x: x.categoria == nova_categoria, y))
+        if len(h) > 0:
+            est = list(filter(lambda x: x.produto.nome == nome_a_alterar, x))
+            if len(est) > 0:
+                est = list(filter(lambda x: x.produto.nome == novo_nome, x))
+                if len(est) == 0:
+                    x = list(map(lambda x: Estoque(Produto(novo_nome, novo_preco, nova_categoria), nova_quantidade) if (x.produto.nome == nome_a_alterar) else (x), x))
+                    print('Produto alterado com sucesso')
+                else:
+                    print(f'Produti {novo_nome} já está cadastrado')
+            else:
+                print('O produto que deseja alterar não existe')
+            
+            with open('estoque.txt', 'w') as arq:
+                for i in x:
+                    arq.writelines(f'{i.produto.nome}|{i.produto.preco}|{i.produto.categoria}|{i.quantidade}\n')
+        else:
+            print('A categoria informada não existe')
 
 a = ControllerEstoque()
-a.remover_produto('banana')
+#a.cadastrar_produto('abacaxi', 60, 'Verduras', 8)
+a.alterar_produto('abacaxi', 'maca', 9, 'Frutas', 90)
