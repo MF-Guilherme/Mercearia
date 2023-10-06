@@ -1,1 +1,1 @@
-banana|5|Frutas|10
+pera|5|Frutas|14
