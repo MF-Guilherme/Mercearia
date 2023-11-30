@@ -100,7 +100,8 @@ class ControllerEstoque:
             for i in x:
                 arq.writelines(f'{i.produto.nome}|{i.produto.preco}|{i.produto.categoria}|{i.quantidade}\n')
 
-    def alterar_produto(self, nome_a_alterar, novo_nome, novo_preco, nova_categoria, nova_quantidade):
+    def alterar_produto(self, nome_a_alterar, novo_nome, novo_preco,
+                        nova_categoria, nova_quantidade):
         x = DaoEstoque.ler()
         y = DaoCategoria.ler()
         h = list(filter(lambda x: x.categoria == nova_categoria, y))
@@ -136,3 +137,46 @@ class ControllerEstoque:
                       )
                 print('-------------------')
 
+
+class ControllerVenda:
+    def cadastrar_venda(self, nome_produto, vendedor, comprador, quantidade_vendida):
+
+        x = DaoEstoque.ler()
+        temp = []
+        existe = False
+        quantidade = False
+        
+        for i in x:
+            if existe is False:
+                if i.produto.nome == nome_produto:
+                    existe = True
+                    if i.quantidade >= quantidade_vendida:
+                        quantidade = True
+                        i.quantidade = i.quantidade - quantidade_vendida
+                        vendido = Venda(Produto(i.produto.nome, i.produto.preco, i.produto.categoria), vendedor, comprador, quantidade_vendida)
+                        valor_compra = quantidade_vendida * i.produto.preco
+                        
+                        DaoVenda.salvar(vendido)
+            temp.append([Produto(i.produto.nome, i.produto.preco, i.produto.categoria), i.quantidade])
+            
+            arq = open('estoque.txt', 'w')
+            arq.write('')
+            
+            for i in temp:
+                with open('estoque.txt', 'a') as arq:
+                    arq.writelines(f'{i[0].nome}|{i[0].preco}|{i[0].categoria}|{str(i[1])}\n')
+            if existe is False:
+                print('O produto não existe')
+                return None
+            elif not quantidade:
+                print('A quantidade vendida não contém em estoque')
+                return None
+            else:
+                print('Venda realizada com sucesso!')
+                return valor_compra
+
+a = ControllerVenda()
+a.cadastrar_venda('maca','Jose', 'Guilherme', 2)
+
+# a = ControllerEstoque()
+# a.mostrar_estoque()

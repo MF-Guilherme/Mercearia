@@ -1,5 +1,6 @@
 from Models import *
 
+
 class DaoCategoria:
     
     @classmethod
@@ -21,13 +22,14 @@ class DaoCategoria:
             categorias.append(Categoria(i))
         
         return categorias
-        
+
+
 class DaoVenda:
 
     @classmethod
     def salvar(cls, venda: Venda):
         with open('vendas.txt', 'a') as arq:
-            arq.writelines(f'{venda.itemVendido.nome}|{venda.itemVendido.preco}|{venda.itemVendido.categoria}|{venda.vendedor}|{venda.comprador}|{venda.quantidadeVendida}|{venda.data}\n')
+            arq.writelines(f'{venda.item_vendido.nome}|{venda.item_vendido.preco}|{venda.item_vendido.categoria}|{venda.vendedor}|{venda.comprador}|{venda.quantidade_vendida}|{venda.data}\n')
 
     @classmethod
     def ler(cls):
@@ -40,6 +42,7 @@ class DaoVenda:
         for i in cls.venda:
             vend.append(Venda(Produto(i[0], i[1], i[2]), i[3], i[4], i[5], i[6]))
         return vend
+
 
 class DaoEstoque:
 
@@ -57,10 +60,12 @@ class DaoEstoque:
         cls.estoque = list(map(lambda x: x.replace('\n', ''), cls.estoque))
         cls.estoque = list(map(lambda x: x.split('|'), cls.estoque))
 
-        estoque = []
-        for i in cls.estoque:
-            estoque.append(Estoque(Produto(i[0], i[1], i[2]), i[3]))
-        return estoque
+        est = []
+        if len(cls.estoque) > 0:
+            for i in cls.estoque:
+                est.append(Estoque(Produto(i[0], i[1], i[2]), int(i[3])))
+        return est
+
 
 class DaoFornecedor:
 
@@ -84,6 +89,7 @@ class DaoFornecedor:
             
             return fornecedores
 
+
 class DaoProduto:
 
     @classmethod
@@ -103,6 +109,7 @@ class DaoProduto:
             for produto in cls.produtos:
                 produtos.append(Produto(produto[0], produto[1], produto[2]))
             return produtos
+
 
 class DaoPessoa:
 
@@ -124,6 +131,7 @@ class DaoPessoa:
             for pessoa in cls.pessoas:
                 pessoas.append(Pessoa(pessoa[0], pessoa[1], pessoa[2], pessoa[3], pessoa[4]))
             return pessoas
+
 
 class DaoFuncionario:
 
