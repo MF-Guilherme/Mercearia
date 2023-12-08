@@ -38,9 +38,9 @@ class ControllerCategoria:
 
     def alterar_categoria(self, categoria_a_alterar, nova_categoria):
         x = DaoCategoria.ler()
-        
+
         cat = list(filter(lambda x: x.categoria == categoria_a_alterar, x))
-        
+
         if len(cat) > 0:
             cat1 = list(filter(lambda x: x.categoria == nova_categoria, x))
             if len(cat1) == 0:
@@ -51,7 +51,7 @@ class ControllerCategoria:
                 print('A categoria para qual deseja alterar já existe')
         else:
             print('A categoria que deseja alterar não existe')
-        
+
         with open('categorias.txt', 'w') as arq:
             for i in x:
                 arq.writelines(i.categoria)
@@ -72,8 +72,8 @@ class ControllerEstoque:
         y = DaoCategoria.ler()
         h = list(filter(lambda x: x.categoria == categoria, y))
         est = list(filter(lambda x: x.produto.nome == nome, x))
-        
-        if len(h) > 0: # se encontrou a categoria 
+
+        if len(h) > 0: # se encontrou a categoria
             if len(est) == 0: # se o nome do produto não estiver no estoque
                 produto = Produto(nome, preco, categoria)
                 DaoEstoque.salvar(produto, quantidade)
@@ -86,7 +86,7 @@ class ControllerEstoque:
     def remover_produto(self, nome):
         x = DaoEstoque.ler()
         est = list(filter(lambda x: x.produto.nome == nome, x))
-        
+
         if len(est) > 0:
             for i in range(len(x)):
                 if x[i].produto.nome == nome:
@@ -95,7 +95,7 @@ class ControllerEstoque:
             print('Produto removido com sucesso')
         else:
             print('O produto que deseja remover não existe no estoque')
-        
+
         with open('estoque.txt', 'w') as arq:
             for i in x:
                 arq.writelines(f'{i.produto.nome}|{i.produto.preco}|{i.produto.categoria}|{i.quantidade}\n')
@@ -116,7 +116,7 @@ class ControllerEstoque:
                     print(f'Produti {novo_nome} já está cadastrado')
             else:
                 print('O produto que deseja alterar não existe')
-            
+
             with open('estoque.txt', 'w') as arq:
                 for i in x:
                     arq.writelines(f'{i.produto.nome}|{i.produto.preco}|{i.produto.categoria}|{i.quantidade}\n')
@@ -145,7 +145,7 @@ class ControllerVenda:
         temp = []
         existe = False
         quantidade = False
-        
+
         for i in x:
             if existe is False:
                 if i.produto.nome == nome_produto:
@@ -155,28 +155,57 @@ class ControllerVenda:
                         i.quantidade = i.quantidade - quantidade_vendida
                         vendido = Venda(Produto(i.produto.nome, i.produto.preco, i.produto.categoria), vendedor, comprador, quantidade_vendida)
                         valor_compra = quantidade_vendida * i.produto.preco
-                        
+
                         DaoVenda.salvar(vendido)
             temp.append([Produto(i.produto.nome, i.produto.preco, i.produto.categoria), i.quantidade])
-            
-            arq = open('estoque.txt', 'w')
-            arq.write('')
-            
-            for i in temp:
-                with open('estoque.txt', 'a') as arq:
-                    arq.writelines(f'{i[0].nome}|{i[0].preco}|{i[0].categoria}|{str(i[1])}\n')
-            if existe is False:
-                print('O produto não existe')
-                return None
-            elif not quantidade:
-                print('A quantidade vendida não contém em estoque')
-                return None
-            else:
-                print('Venda realizada com sucesso!')
-                return valor_compra
 
-a = ControllerVenda()
-a.cadastrar_venda('maca','Jose', 'Guilherme', 2)
+        arq = open('estoque.txt', 'w')
+        arq.write('')
+
+        for i in temp:
+            with open('estoque.txt', 'a') as arq:
+                arq.writelines(f'{i[0].nome}|{i[0].preco}|{i[0].categoria}|{str(i[1])}\n')
+        if existe is False:
+            print('O produto não existe')
+            return None
+        elif not quantidade:
+            print('A quantidade vendida não contém em estoque')
+            return None
+        else:
+            print('Venda realizada com sucesso!')
+            return valor_compra
+
+    def relatorio_produtos(self):
+        vendas = DaoVenda.ler()
+        produtos = []
+        a = 1
+
+        print('Esses são os produtos mais vendidos\n')
+
+        for i in vendas:
+            nome = i.item_vendido.nome
+            quantidade = int(i.quantidade_vendida)
+            tamanho = list(filter(lambda x: x['produto'] == nome, produtos))
+            if len(tamanho) > 0:
+                produtos = list(map(lambda x: {'produto': nome, 'quantidade': int(x['quantidade']) + quantidade}
+                                    if (x['produto'] == nome) else(x), produtos))
+            else:
+                produtos.append({'produto': nome, 'quantidade': quantidade})
+
+        ordenado = sorted(produtos, key=lambda k: k['quantidade'], reverse=True)
+
+        for i in ordenado:
+            print(f'==========Produto [{a}]==========')
+            print(f"Produto: {i['produto']}\n"
+                    f"Quantidade: {i['quantidade']}\n")
+            a += 1
+
+# a = ControllerVenda()
+# a.cadastrar_venda('abacaxi','Jose', 'Guilherme', 9)
 
 # a = ControllerEstoque()
 # a.mostrar_estoque()
+# a.cadastrar_produto('abacaxi', 6, 'Frios', 90)
+
+# a = ControllerVenda()
+# a.relatorio_produtos()

@@ -1,1 +1,3 @@
 maca|75|Frutas|3
+banana|75|Frutas|1
+abacaxi|6|Frios|57
