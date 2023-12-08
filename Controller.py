@@ -200,6 +200,27 @@ class ControllerVenda:
                     f"Quantidade: {i['quantidade']}\n")
             a += 1
 
+    def mostrar_vendas(self, data_inicio, data_termino):
+        vendas = DaoVenda.ler()
+        data_inicio1 = datetime.strptime(data_inicio, '%d/%m/%Y')
+        data_termino1 = datetime.strptime(data_termino, '%d/%m/%Y')
+
+        vendas_selecionadas = list(filter(lambda x: datetime.strptime(x.data, '%d/%m/%Y - %H:%M:%S') >= data_inicio1 
+                                          and datetime.strptime(x.data, '%d/%m/%Y - %H:%M:%S') <= data_termino1, vendas))
+
+        cont = 1
+        total = 0
+        for i in vendas_selecionadas:
+            print(f"==========Venda [{cont}]==========")
+            print(f"Nome: {i.item_vendido.nome}\n"
+                  f"Data: {i.data}\n"
+                  f"Quantidade: {i.quantidade_vendida}\n"
+                  f"Cliente: {i.comprador}\n"
+                  f"Vendedor: {i.vendedor}\n")
+            total += int(i.item_vendido.preco) * int(i.quantidade_vendida)
+            cont += 1
+        print(f"Total vendido: R$ {total:.2f}")
+
 # a = ControllerVenda()
 # a.cadastrar_venda('abacaxi','Jose', 'Guilherme', 9)
 
@@ -209,3 +230,6 @@ class ControllerVenda:
 
 # a = ControllerVenda()
 # a.relatorio_produtos()
+
+# a = ControllerVenda()
+# a.mostrar_vendas("01/11/2023", "30/12/2023")

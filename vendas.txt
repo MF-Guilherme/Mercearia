@@ -1,4 +1,4 @@
-maca|75|Frutas|Jo�o|Guilherme|3|06/10/2023 - 20:54:26
+maca|75|Frutas|Joao|Guilherme|3|06/10/2023 - 20:54:26
 maca|75|Frutas|Jose|Guilherme|1|29/11/2023 - 22:25:34
 maca|75|Frutas|Jose|Guilherme|5|29/11/2023 - 22:27:41
 maca|75|Frutas|Jose|Guilherme|2|29/11/2023 - 22:28:02
