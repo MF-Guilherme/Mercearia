@@ -120,7 +120,7 @@ class DaoPessoa:
 
     @classmethod
     def ler(cls):
-        with open('pessoas.txt', 'r') as arq:
+        with open('pessoas.txt', 'r', encoding='utf-8') as arq:
             cls.pessoas = arq.readlines()
 
             cls.pessoas = list(map(lambda x: x.replace('\n', ''), cls.pessoas))

@@ -288,6 +288,33 @@ class ControllerFornecedor:
                       f"CNPJ: {fornecedor.cnpj}\n")
 
 
+class ControllerCliente:
+    def cadastrar_cliente(self, nome, telefone, cpf, email, endereco):
+        lista_clientes = DaoPessoa.ler()
+        existe = list(filter(lambda x: x.cpf == cpf, lista_clientes))
+        if len(existe) > 0:
+            print("O CPF já existe")
+            return None
+        else:
+            if len(cpf) == 11 and len(telefone) <= 11:
+                DaoPessoa.salvar(Pessoa(nome, telefone, cpf, email, endereco))
+                print("Cliente cadastrado com sucesso!")
+            else:
+                print("Digite um CPF válido")
+    
+    def alterar_cliente(self, cpf_a_alterar, novo_nome, novo_telefone, novo_cpf, novo_email, novo_endereco):
+        lista_clientes = DaoPessoa.ler()
+        existe = list(filter(lambda x: x.cpf == cpf_a_alterar, lista_clientes))
+        if len(existe) > 0:
+            lista_clientes = list(map(lambda x: Pessoa(novo_nome, novo_telefone, novo_cpf, novo_email, novo_endereco) 
+                                      if(x.cpf == cpf_a_alterar) else(x), lista_clientes))
+        else:
+            print("O CPF ")
+
+
+# a = ControllerCliente()
+# a.cadastrar_cliente('Liz', '11912345674', '56984145689', 'liz@teste.com', 'Rua da Liz Teste, 581')
+
 # a = ControllerFornecedor()
 # a.mostrar_fornecedores()
 # a.remover_fornecedor('Churras Bom')
