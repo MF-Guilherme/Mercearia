@@ -71,12 +71,12 @@ class DaoFornecedor:
 
     @classmethod
     def salvar(cls, fornecedor: Fornecedor):
-        with open('fornecedores.txt', 'a') as arq:
+        with open('fornecedores.txt', 'a', encoding="utf-8") as arq:
             arq.writelines(f'{fornecedor.nome}|{fornecedor.cnpj}|{fornecedor.telefone}|{fornecedor.categoria}\n')
     
     @classmethod
     def ler(cls):
-        with open('fornecedores.txt', 'r') as arq:
+        with open('fornecedores.txt', 'r', encoding='utf-8') as arq:
             cls.fornecedores = arq.readlines()
 
             cls.fornecedores = list(map(lambda x: x.replace('\n', ''), cls.fornecedores))

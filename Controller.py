@@ -110,7 +110,8 @@ class ControllerEstoque:
             if len(est) > 0:
                 est = list(filter(lambda x: x.produto.nome == novo_nome, x))
                 if len(est) == 0:
-                    x = list(map(lambda x: Estoque(Produto(novo_nome, novo_preco, nova_categoria), nova_quantidade) if (x.produto.nome == nome_a_alterar) else (x), x))
+                    x = list(map(lambda x: Estoque(Produto(novo_nome, novo_preco, nova_categoria), nova_quantidade) 
+                                 if (x.produto.nome == nome_a_alterar) else (x), x))
                     print('Produto alterado com sucesso')
                 else:
                     print(f'Produti {novo_nome} já está cadastrado')
@@ -220,6 +221,79 @@ class ControllerVenda:
             total += int(i.item_vendido.preco) * int(i.quantidade_vendida)
             cont += 1
         print(f"Total vendido: R$ {total:.2f}")
+
+
+class ControllerFornecedor:
+    def cadastrar_fornecedor(self, nome, cnpj, telefone, categoria):
+        lista_fornecedores = DaoFornecedor.ler()
+        lista_cnpj = list(filter(lambda x: x.cnpj == cnpj, lista_fornecedores))
+        lista_telefone = list(filter(lambda x: x.telefone == telefone, lista_fornecedores))
+        if len(lista_cnpj) > 0:
+            print("O cnpj já existe")
+        elif len(lista_telefone) > 0:
+            print("O telefone já existe")
+        else:
+            if len(cnpj) == 14 and len(telefone) <= 11:
+                DaoFornecedor.salvar(Fornecedor(nome, cnpj, telefone, categoria))
+                print("Fornecedor cadastrado com sucesso!")
+            else:
+                print("Digite um cnpj ou telefone válido")
+
+    def alterar_fornecedor(self, nome_a_alterar, novo_nome, novo_cnpj, novo_telefone, nova_categoria):
+        lista_fornecedores = DaoFornecedor.ler()
+        existe = list(filter(lambda x: x.nome == nome_a_alterar, lista_fornecedores))
+        if len(existe) > 0:
+            existe = list(filter(lambda x: x.cnpj == novo_cnpj, lista_fornecedores))
+            if len(existe) == 0:
+                lista_fornecedores = list(map(lambda x: Fornecedor(novo_nome, novo_cnpj, novo_telefone, nova_categoria)
+                                              if(x.nome == nome_a_alterar) else(x), lista_fornecedores))
+            else:
+                return print('O CNPJ já existe')
+        else:
+            return print('O fornecedor que deseja alterar não existe')
+
+        with open('fornecedores.txt', 'w') as arq:
+            for fornecedor in lista_fornecedores:
+                arq.writelines(f'{fornecedor.nome}|{fornecedor.cnpj}|{fornecedor.telefone}|{fornecedor.categoria}\n')
+            print('Fornecedor alterado com sucesso')
+    
+    def remover_fornecedor(self, nome):
+        lista_fornecedores = DaoFornecedor.ler()
+        existe = list(filter(lambda x: x.nome == nome, lista_fornecedores))
+        if len(existe) > 0:
+            for fornecedor in range(len(lista_fornecedores)):
+                if lista_fornecedores[fornecedor].nome == nome:
+                    del lista_fornecedores[fornecedor]
+                    break
+        else:
+            print("O fornecedor que deseja remover não existe")
+            return None
+
+        with open('fornecedores.txt', 'w', encoding='utf-8') as arq:
+            for fornecedor in lista_fornecedores:
+                arq.writelines(f'{fornecedor.nome}|{fornecedor.cnpj}|{fornecedor.telefone}|{fornecedor.categoria}\n')
+            print('Fornecedor removido com sucesso')
+
+    def mostrar_fornecedores(self):
+        lista_fornecedores = DaoFornecedor.ler()
+        if len(lista_fornecedores) == 0:
+            print("Nenhum fornecedor cadastrado")
+            return None
+        else:
+            print("========== Fornecedores ==========")            
+            for fornecedor in lista_fornecedores:
+                print(f"Categoria fornecida: {fornecedor.categoria}\n"
+                      f"Nome: {fornecedor.nome}\n"
+                      f"Telefone: {fornecedor.telefone}\n"
+                      f"CNPJ: {fornecedor.cnpj}\n")
+
+
+# a = ControllerFornecedor()
+# a.mostrar_fornecedores()
+# a.remover_fornecedor('Churras Bom')
+
+# a = ControllerFornecedor()
+# a.cadastrar_fornecedor("Churras Bom", '32112365445678', '888888889', "Açougue")
 
 # a = ControllerVenda()
 # a.cadastrar_venda('abacaxi','Jose', 'Guilherme', 9)
