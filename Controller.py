@@ -351,3 +351,72 @@ class ControllerCliente:
                       f"CPF: {cliente.cpf}\n"
                       f"E-mail: {cliente.email}\n"
                       f"Endereço: {cliente.endereco}\n")
+
+
+class ControllerFuncionario:
+    def cadastrar_funcionario(self, clt, nome, telefone, cpf, email, endereco):
+        lista_funcionarios = DaoFuncionario.ler()
+        lista_cpf = list(filter(lambda x: x.cpf == cpf, lista_funcionarios))
+        lista_clt = list(filter(lambda x: x.clt == clt, lista_funcionarios))
+
+        if len(lista_cpf) > 0:
+            print("O CPF já está cadastrado")
+            return None
+        elif len(lista_clt) > 0:
+            print("Este número de CLT já está cadastrado")
+            return None
+        else:
+            if len(cpf) >= 10 and len(cpf) <= 11:
+                DaoFuncionario.salvar(Funcionario(clt, nome, telefone, cpf, email, endereco))
+                print("Funcionário cadastrado com sucesso")
+            else:
+                print("CPF inválido. Por favor informe um CPF válido")
+                return None
+    
+    def alterar_funcionario(self, clt_a_alterar, novo_clt, novo_nome, novo_telefone, novo_cpf, novo_email, novo_endereco):
+        lista_funcionarios = DaoFuncionario.ler()
+        clt_existe = list(filter(lambda x: x.clt == clt_a_alterar, lista_funcionarios))
+        if len(clt_existe) == 0:
+            print("O código CLT que você deseja alterar não existe")
+            return None
+        else:
+            if len(novo_cpf) >= 10 and len(novo_cpf) <= 11:
+                lista_funcionarios = list(map(lambda x: Funcionario(novo_clt, novo_nome, novo_telefone, novo_cpf, novo_email, novo_endereco) 
+                                            if(x.clt == novo_clt) else(x), lista_funcionarios))
+            else:
+                print("CPF inválido. Por favor, insira um CPF válido")
+                return None
+        
+        with open('funcionarios.txt', 'w', encoding='utf-8') as arq:
+            for funcionario in lista_funcionarios:
+                arq.writelines(f'{funcionario.clt}|{funcionario.nome}|{funcionario.telefone}|{funcionario.cpf}|{funcionario.email}|{funcionario.endereco}\n')
+            print("Dados alterados com sucesso!")
+
+    def remover_funcionario(self, clt):
+        lista_funcionarios = DaoFuncionario.ler()
+        existe_clt = list(filter(lambda x: x.clt == clt, lista_funcionarios))
+        if len(existe_clt) > 0:
+            for i, funcionario in enumerate(lista_funcionarios):
+                if funcionario.clt == clt:
+                    del lista_funcionarios[i]
+                    break
+        else:
+            print("O número CLT que você deseja excluir não existe")
+            return None
+        
+        with open('funcionarios.txt', 'w', encoding='utf-8') as arq:
+            for funcionario in lista_funcionarios:
+                arq.writelines(f'{funcionario.clt}|{funcionario.nome}|{funcionario.telefone}|{funcionario.cpf}|{funcionario.email}|{funcionario.endereco}\n')
+            print("Funcionário excluído com sucesso!")
+
+    def mostrar_funcionarios(self):
+        lista_funcionarios = DaoFuncionario.ler()
+        print("========== Funcionários ==========")
+        for funcionario in lista_funcionarios:
+            print(f"Número CLT: {funcionario.clt}\n"
+                  f"Nome: {funcionario.nome}\n"
+                  f"Telefone: {funcionario.telefone}\n"
+                  f"CPF: {funcionario.cpf}\n"
+                  f"E-mail: {funcionario.email}\n"
+                  f"Endereço: {funcionario.endereco}\n")
+

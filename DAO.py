@@ -137,7 +137,7 @@ class DaoFuncionario:
 
     @classmethod
     def salvar(cls, funcionario: Funcionario):
-        with open('funcionarios.txt', 'a') as arq:
+        with open('funcionarios.txt', 'a', encoding='utf-8') as arq:
             arq.writelines(f'{funcionario.clt}|{funcionario.nome}|{funcionario.telefone}|{funcionario.cpf}|{funcionario.email}|{funcionario.endereco}\n')
 
     @classmethod
