@@ -115,7 +115,7 @@ class DaoPessoa:
 
     @classmethod
     def salvar(cls, pessoa: Pessoa):
-        with open('pessoas.txt', 'a') as arq:
+        with open('pessoas.txt', 'a', encoding='utf-8') as arq:
             arq.writelines(f'{pessoa.nome}|{pessoa.telefone}|{pessoa.cpf}|{pessoa.email}|{pessoa.endereco}\n')
 
     @classmethod

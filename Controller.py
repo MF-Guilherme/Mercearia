@@ -306,31 +306,48 @@ class ControllerCliente:
         lista_clientes = DaoPessoa.ler()
         existe = list(filter(lambda x: x.cpf == cpf_a_alterar, lista_clientes))
         if len(existe) > 0:
-            lista_clientes = list(map(lambda x: Pessoa(novo_nome, novo_telefone, novo_cpf, novo_email, novo_endereco) 
-                                      if(x.cpf == cpf_a_alterar) else(x), lista_clientes))
+            if len(novo_cpf) >= 10 and len(novo_cpf) <= 11:
+                lista_clientes = list(map(lambda x: Pessoa(novo_nome, novo_telefone, novo_cpf, novo_email, novo_endereco) 
+                                        if(x.cpf == cpf_a_alterar) else(x), lista_clientes))
+                print("Dados alterados com sucesso!")
+            else:
+                print("CPF inválido")
+                return None
         else:
-            print("O CPF ")
+            print("O CPF informado não existe")
+            return None
 
+        with open('pessoas.txt', 'w', encoding='utf-8') as arq:
+            for cliente in lista_clientes:
+                arq.writelines(f'{cliente.nome}|{cliente.telefone}|{cliente.cpf}|{cliente.email}|{cliente.endereco}\n')
 
-# a = ControllerCliente()
-# a.cadastrar_cliente('Liz', '11912345674', '56984145689', 'liz@teste.com', 'Rua da Liz Teste, 581')
+    def remover_cliente(self, cpf_a_remover):
+        lista_clientes = DaoPessoa.ler()
+        existe = list(filter(lambda x: x.cpf == cpf_a_remover, lista_clientes))
+        if len(existe) > 0:
+            for i, cliente in enumerate(lista_clientes):
+                if cliente.cpf == cpf_a_remover:
+                    del lista_clientes[i]
+                    print("Cliente removido com sucesso")
+                    break
+        else:
+            print("O CPF que você digitou não existe")
 
-# a = ControllerFornecedor()
-# a.mostrar_fornecedores()
-# a.remover_fornecedor('Churras Bom')
+        with open('pessoas.txt', 'w', encoding='utf-8') as arq:
+            for cliente in lista_clientes:
+                arq.writelines(f'{cliente.nome}|{cliente.telefone}|{cliente.cpf}|{cliente.email}|{cliente.endereco}\n')
 
-# a = ControllerFornecedor()
-# a.cadastrar_fornecedor("Churras Bom", '32112365445678', '888888889', "Açougue")
+    def mostrar_clientes(self):
+        lista_clientes = DaoPessoa.ler()
 
-# a = ControllerVenda()
-# a.cadastrar_venda('abacaxi','Jose', 'Guilherme', 9)
-
-# a = ControllerEstoque()
-# a.mostrar_estoque()
-# a.cadastrar_produto('abacaxi', 6, 'Frios', 90)
-
-# a = ControllerVenda()
-# a.relatorio_produtos()
-
-# a = ControllerVenda()
-# a.mostrar_vendas("01/11/2023", "30/12/2023")
+        if len(lista_clientes) == 0:
+            print("Nenhum cliente cadastrado")
+            return None
+        else:
+            print("========== Clientes ==========")
+            for cliente in lista_clientes:
+                print(f"Nome: {cliente.nome}\n"
+                      f"Telefone: {cliente.telefone}\n"
+                      f"CPF: {cliente.cpf}\n"
+                      f"E-mail: {cliente.email}\n"
+                      f"Endereço: {cliente.endereco}\n")

@@ -1,3 +1,4 @@
 Guilherme|123654789|12345645-89|guilherme@teste.com|Rua do teste
 Andressa|999695774|24569871-47|andressa@teste.com|Teste da Rua
 Liz|11912345674|56984145689|liz@teste.com|Rua da Liz Teste, 581
+Isaac Teste da Silva|22222222222|55555555555|isaac@teste.com|Rua do Isaac, 581
