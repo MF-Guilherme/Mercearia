@@ -30,11 +30,19 @@ class ControllerCategoria:
                     del x[i]
                     break
             print('Categoria removida com sucesso!')
-            #TODO: COLOCAR SEM CATEGORIA NO ESTOQUE
-            with open('categorias.txt', 'w') as arq:
+
+            with open('categorias.txt', 'w', encoding='utf-8') as arq:
                 for i in x:
                     arq.writelines(i.categoria)
                     arq.writelines('\n')
+
+        estoque = DaoEstoque.ler()
+        estoque = list(map(lambda x: Estoque(Produto(x.produto.nome, x.produto.preco, "Sem categoria"), x.quantidade)
+                                  if (x.produto.categoria == categoria_a_remover) else(x), estoque))
+
+        with open('estoque.txt', 'w', encoding='utf-8') as arq:
+            for i in estoque:
+                arq.writelines(f'{i.produto.nome}|{i.produto.preco}|{i.produto.categoria}|{i.quantidade}\n')
 
     def alterar_categoria(self, categoria_a_alterar, nova_categoria):
         x = DaoCategoria.ler()
@@ -46,16 +54,27 @@ class ControllerCategoria:
             if len(cat1) == 0:
                 x = list(map(lambda x: Categoria(nova_categoria) if (x.categoria == categoria_a_alterar) else (x), x))
                 print('A alteração foi efetuada com sucesso')
-                #TODO: ALTERAR A CATEGORIA NO ESTOQUE
+
             else:
                 print('A categoria para qual deseja alterar já existe')
+                return None
         else:
             print('A categoria que deseja alterar não existe')
+            return None
 
-        with open('categorias.txt', 'w') as arq:
+        with open('categorias.txt', 'w', encoding='utf-8') as arq:
             for i in x:
                 arq.writelines(i.categoria)
                 arq.writelines('\n')
+
+        estoque = DaoEstoque.ler()
+        estoque = list(map(lambda x: Estoque(Produto(x.produto.nome, x.produto.preco, nova_categoria), x.quantidade)
+                           if(x.produto.categoria == categoria_a_alterar) else(x), estoque))
+
+        with open('estoque.txt', 'w', encoding='utf-8') as arq:
+            for i in estoque:
+                arq.writelines(f'{i.produto.nome}|{i.produto.preco}|{i.produto.categoria}|{i.quantidade}\n')
+
 
     def mostrar_categoria(self):
         categorias = DaoCategoria.ler()
@@ -110,7 +129,7 @@ class ControllerEstoque:
             if len(est) > 0:
                 est = list(filter(lambda x: x.produto.nome == novo_nome, x))
                 if len(est) == 0:
-                    x = list(map(lambda x: Estoque(Produto(novo_nome, novo_preco, nova_categoria), nova_quantidade) 
+                    x = list(map(lambda x: Estoque(Produto(novo_nome, novo_preco, nova_categoria), nova_quantidade)
                                  if (x.produto.nome == nome_a_alterar) else (x), x))
                     print('Produto alterado com sucesso')
                 else:
@@ -206,7 +225,7 @@ class ControllerVenda:
         data_inicio1 = datetime.strptime(data_inicio, '%d/%m/%Y')
         data_termino1 = datetime.strptime(data_termino, '%d/%m/%Y')
 
-        vendas_selecionadas = list(filter(lambda x: datetime.strptime(x.data, '%d/%m/%Y - %H:%M:%S') >= data_inicio1 
+        vendas_selecionadas = list(filter(lambda x: datetime.strptime(x.data, '%d/%m/%Y - %H:%M:%S') >= data_inicio1
                                           and datetime.strptime(x.data, '%d/%m/%Y - %H:%M:%S') <= data_termino1, vendas))
 
         cont = 1
@@ -256,7 +275,7 @@ class ControllerFornecedor:
             for fornecedor in lista_fornecedores:
                 arq.writelines(f'{fornecedor.nome}|{fornecedor.cnpj}|{fornecedor.telefone}|{fornecedor.categoria}\n')
             print('Fornecedor alterado com sucesso')
-    
+
     def remover_fornecedor(self, nome):
         lista_fornecedores = DaoFornecedor.ler()
         existe = list(filter(lambda x: x.nome == nome, lista_fornecedores))
@@ -280,7 +299,7 @@ class ControllerFornecedor:
             print("Nenhum fornecedor cadastrado")
             return None
         else:
-            print("========== Fornecedores ==========")            
+            print("========== Fornecedores ==========")
             for fornecedor in lista_fornecedores:
                 print(f"Categoria fornecida: {fornecedor.categoria}\n"
                       f"Nome: {fornecedor.nome}\n"
@@ -301,13 +320,13 @@ class ControllerCliente:
                 print("Cliente cadastrado com sucesso!")
             else:
                 print("Digite um CPF válido")
-    
+
     def alterar_cliente(self, cpf_a_alterar, novo_nome, novo_telefone, novo_cpf, novo_email, novo_endereco):
         lista_clientes = DaoPessoa.ler()
         existe = list(filter(lambda x: x.cpf == cpf_a_alterar, lista_clientes))
         if len(existe) > 0:
             if len(novo_cpf) >= 10 and len(novo_cpf) <= 11:
-                lista_clientes = list(map(lambda x: Pessoa(novo_nome, novo_telefone, novo_cpf, novo_email, novo_endereco) 
+                lista_clientes = list(map(lambda x: Pessoa(novo_nome, novo_telefone, novo_cpf, novo_email, novo_endereco)
                                         if(x.cpf == cpf_a_alterar) else(x), lista_clientes))
                 print("Dados alterados com sucesso!")
             else:
@@ -372,7 +391,7 @@ class ControllerFuncionario:
             else:
                 print("CPF inválido. Por favor informe um CPF válido")
                 return None
-    
+
     def alterar_funcionario(self, clt_a_alterar, novo_clt, novo_nome, novo_telefone, novo_cpf, novo_email, novo_endereco):
         lista_funcionarios = DaoFuncionario.ler()
         clt_existe = list(filter(lambda x: x.clt == clt_a_alterar, lista_funcionarios))
@@ -381,12 +400,12 @@ class ControllerFuncionario:
             return None
         else:
             if len(novo_cpf) >= 10 and len(novo_cpf) <= 11:
-                lista_funcionarios = list(map(lambda x: Funcionario(novo_clt, novo_nome, novo_telefone, novo_cpf, novo_email, novo_endereco) 
+                lista_funcionarios = list(map(lambda x: Funcionario(novo_clt, novo_nome, novo_telefone, novo_cpf, novo_email, novo_endereco)
                                             if(x.clt == novo_clt) else(x), lista_funcionarios))
             else:
                 print("CPF inválido. Por favor, insira um CPF válido")
                 return None
-        
+
         with open('funcionarios.txt', 'w', encoding='utf-8') as arq:
             for funcionario in lista_funcionarios:
                 arq.writelines(f'{funcionario.clt}|{funcionario.nome}|{funcionario.telefone}|{funcionario.cpf}|{funcionario.email}|{funcionario.endereco}\n')
@@ -403,7 +422,7 @@ class ControllerFuncionario:
         else:
             print("O número CLT que você deseja excluir não existe")
             return None
-        
+
         with open('funcionarios.txt', 'w', encoding='utf-8') as arq:
             for funcionario in lista_funcionarios:
                 arq.writelines(f'{funcionario.clt}|{funcionario.nome}|{funcionario.telefone}|{funcionario.cpf}|{funcionario.email}|{funcionario.endereco}\n')
@@ -419,4 +438,3 @@ class ControllerFuncionario:
                   f"CPF: {funcionario.cpf}\n"
                   f"E-mail: {funcionario.email}\n"
                   f"Endereço: {funcionario.endereco}\n")
-

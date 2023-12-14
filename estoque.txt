@@ -1,3 +1,2 @@
-maca|75|Frutas|3
-banana|75|Frutas|1
-abacaxi|6|Frios|57
+chuchu|8|Frios|50
+banana|6|Açougue|800

@@ -5,14 +5,14 @@ class DaoCategoria:
     
     @classmethod
     def salvar(cls, categoria):
-        with open('categorias.txt', 'a') as arq:
+        with open('categorias.txt', 'a', encoding='utf-8') as arq:
             arq.writelines(categoria)
             arq.writelines('\n')
 
     
     @classmethod
     def ler(cls):
-        with open('categorias.txt', 'r') as arq:
+        with open('categorias.txt', 'r', encoding='utf-8') as arq:
             cls.categoria = arq.readlines()
 
         cls.categoria = list(map(lambda x: x.replace('\n', ''), cls.categoria))
